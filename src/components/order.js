@@ -1,6 +1,11 @@
 import { orderData } from "../Assets/orderData";
+import { useContext } from "react";
+import userContext from "../context/user/userContext";
 
 export default function Order() {
+  const { purchaseHistory, setPurchaseHistory } = useContext(userContext);
+  console.log(purchaseHistory);
+
   return (
     <>
       <div className="flex justify-center">
@@ -8,10 +13,10 @@ export default function Order() {
           <h1 className="text-3xl font-bold tracking-widest ">Your Orders</h1>
 
           <div className="flex flex-col space-y-6">
-            {orderData.map((order, index) => (
+            {purchaseHistory.map((order, index) => (
               <div key={index} className="flex flex-col space-y-3">
                 <h2 className="text-xl font-semibold justify-center">
-                  Order On: {order.orderDate}
+                  Order On: {order.date}
                 </h2>
 
                 {/* create table with head col are title  price   quantity and total price */}
@@ -25,19 +30,19 @@ export default function Order() {
                     </tr>
                   </thead>
                   <tbody>
-                    {order.orderItems.map((item, index) => (
+                    {order.items.map((item, index) => (
                       <tr key={index} className="border-b-2 border-white h-8 ">
                         <td className=" bg-red-200 border border-green-500 overflow-hidden border-r-2 ">
-                          <div className="truncate">{item.itemName}</div>
+                          <div className="truncate">{item.name}</div>
                         </td>
                         <td className=" border-r-2 border-white">
-                          {item.itemPrice}
+                          {item.price}
                         </td>
                         <td className=" border-r-2 border-white">
-                          {item.itemQty}
+                          {item.quantity}
                         </td>
                         <td className=" border-r-2 border-white">
-                          {item.itemPrice * item.itemQty}
+                          {item.price * item.quantity}
                         </td>
                       </tr>
                     ))}
@@ -49,10 +54,9 @@ export default function Order() {
                       <td></td>
                       <td></td>
                       <td>
-                        {order.orderItems.reduce(
-                          (acc, item) => acc + item.itemPrice * item.itemQty,
-                          0
-                        )}
+                        {order.items.reduce(
+                          (acc, item) => acc + item.price * item.quantity, 0)
+                        }
                       </td>
                     </tr>
                   </tfoot>

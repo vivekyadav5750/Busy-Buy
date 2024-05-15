@@ -6,6 +6,10 @@ justify-between
 class="flex flex-col justify-center items-start"        (IMPORTANT)  (make items start from left side)
 space-y-4
 
+justify-end (items -row)
+items-center (items - col)
+text-center (text)
+
 h-[90vh] w-[90vw]
 
 ring-2 (Utilities for creating outline rings with box-shadows.) -> ex focus:ring-1

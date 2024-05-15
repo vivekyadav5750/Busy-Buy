@@ -1,6 +1,35 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebaseInit";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const email = e.target[0].value;
+    const password = e.target[1].value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log(userCredential);
+        toast.success("User Logged In Successfully");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error.message);
+        if (error.message === "Firebase: Error (auth/invalid-credential).") {
+          toast.error("invalid-credential");
+          return;
+        }
+        toast.error("Something went wrong! Please try again.");
+      });
+
+  };
+
   return (
     // main frame  for login Page
     <main className="flex items-center justify-center">
@@ -10,7 +39,10 @@ export default function LoginPage() {
           Sign In
         </h1>
 
-        <form className="flex flex-col space-y-4  pt-8">
+        <form
+          className="flex flex-col space-y-4  pt-8"
+          onSubmit={(e) => handleSubmit(e)}
+        >
           <input
             className="h-12 w-72 p-3 bg-shadowWhite box-border border-2 border-darkPurple rounded-lg text-lg text-darkPurple font-semibold 
             focus:outline-none focus:border-darkPurple-500 focus:ring-1 focus:ring-darkPurple-500 placeholder:text-lg placeholder:font-normal"
