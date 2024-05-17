@@ -6,21 +6,12 @@ import {
 } from "firebase/auth";
 import { formatFirebaseResponseError } from "../utils/formatFirebaseResponseError";
 import { initializeApp } from "firebase/app";
+import app from "../firebaseInit";
 
 export class AuthService {
   auth;
 
   constructor() {
-    const firebaseConfig = {
-      apiKey: "AIzaSyCLyIkxarSkHJzaYW4WR8VKK7iRkiijgb0",
-      authDomain: "busy-buy-f010f.firebaseapp.com",
-      projectId: "busy-buy-f010f",
-      storageBucket: "busy-buy-f010f.appspot.com",
-      messagingSenderId: "987500738168",
-      appId: "1:987500738168:web:be1859f8a29c4604931f8d",
-    };
-    const app = initializeApp(firebaseConfig);
-
     this.auth = getAuth(app);
   }
 

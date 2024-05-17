@@ -4,9 +4,9 @@ import { FaCircleMinus, FaCirclePlus } from "react-icons/fa6";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function CartPage(props) {
-  const {  cart,  } = useContext(userContext);
+  const {  cart  } = useContext(userContext);
   const { handlePurchase, handleOrderCart } = props;
-  
+  console.log(cart);  
  
   return (
     <>

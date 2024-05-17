@@ -38,15 +38,16 @@ const UserState = ({ children }) => {
           console.log('cartData',cartData);
           // check if cart is empty
           if (cartData.length === 0) {
+            console.log("cart is empty");
             setCart([]);
           }
           else{
             setCart(cartData);
           }
         }
-        else{
-          setCart([]);
-        }
+        // else{
+        //   setCart([]);
+        // }
       });
     });
   }, [user]);

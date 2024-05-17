@@ -8,7 +8,7 @@ import productServices from "../services/productServices.js";
 
 export default function Cart() {
   const { user, cart, setCart, purchaseHistory,  } = useContext(userContext);
-  // console.log(user);
+  console.log(cart);
 
   async function handleOrderCart(type, product) {
     const newCart = [...cart];
