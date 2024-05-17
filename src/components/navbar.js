@@ -1,29 +1,23 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { NavLink } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
-import { VscSignIn } from "react-icons/vsc";
-import { VscSignOut } from "react-icons/vsc";
+import { VscSignIn, VscSignOut } from "react-icons/vsc";
 import { GiShoppingCart } from "react-icons/gi";
 import { BsHandbag } from "react-icons/bs";
 import userContext from "../context/user/userContext";
-import { useContext } from "react";
-import { signOut } from "firebase/auth";
-import { auth } from "../firebaseInit";
 import { toast } from "react-toastify";
+import authService from "../services/authSevices";
 
 export default function Navbar() {
   const { user } = useContext(userContext);
-  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        toast.success("User Logged Out Successfully");
-        navigate("/signin");
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Something went wrong! Please try again.");
-      });
+  const handleLogout = async () => {
+    const { error } = authService.logout();
+
+    if (error) {
+      toast.error("Logout failed!!");
+      return;
+    }
   };
 
   return (

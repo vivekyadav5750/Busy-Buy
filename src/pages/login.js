@@ -1,33 +1,25 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebaseInit";
+import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import authService from "../services/authSevices";
 
 export default function LoginPage() {
-
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const email = e.target[0].value;
     const password = e.target[1].value;
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log(userCredential);
-        toast.success("User Logged In Successfully");
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log(error.message);
-        if (error.message === "Firebase: Error (auth/invalid-credential).") {
-          toast.error("invalid-credential");
-          return;
-        }
-        toast.error("Something went wrong! Please try again.");
-      });
+    const { error } = await authService.signin(email, password);
 
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    toast.success("User Logged In Successfully");
+    navigate("/");
   };
 
   return (

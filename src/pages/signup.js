@@ -1,18 +1,19 @@
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { toast } from "react-toastify";
-import { auth } from "../firebaseInit";
 import { useNavigate } from "react-router-dom";
+import authService from "../services/authSevices";
 
 export default function SignupPage() {
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const name = e.target.name.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
 
+    // Shift password validation to utils
     const emailRegex =
       /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g;
 
@@ -30,25 +31,16 @@ export default function SignupPage() {
     //   return;
     // }
 
+    const { error } = await authService.signup(email, password);
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((useActionData) => {
-        console.log(useActionData);
-        toast.success("User Created Successfully");
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error.message === "Firebase: Error (auth/email-already-in-use).") {
-          toast.info("Email already in use");
-          navigate("/signin");
-          return;
-        }
-        toast.error("User Creation Failed");
-      });
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
 
-      // navigate to sign in page
-
+    toast.success("User Created Successfully");
+    // navigate to sign in page
+    navigate("/signin");
   };
 
   return (

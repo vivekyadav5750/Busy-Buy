@@ -3,21 +3,19 @@ import PropTypes from "prop-types";
 import { useContext } from "react";
 import userContext from "../context/user/userContext";
 import { toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import { db } from "../firebaseInit.js";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import "react-toastify/dist/ReactToastify.css";
+
+import productServices from "../services/productServices.js";
 
 export default function ItemsCard({ searchText, price, category }) {
-  const { user, cart, setCart } = useContext(userContext);
-  console.log(user);
+  const { user, cart } = useContext(userContext);
 
-   const handleAddToCart =  async (product) => {
+  async function handleAddToCart(product) {
     if (!user) {
       toast.info("Please Login to add to cart");
       return;
     }
-    // toast.success("Added to Cart!!");
-
+    
     const newCart = [...cart];
     console.log(newCart);
     const index = newCart.findIndex((item) => item.id === product.id);
@@ -27,18 +25,16 @@ export default function ItemsCard({ searchText, price, category }) {
       newCart[index].quantity += 1;
     }
     
-    //adding to DB
-    // const docRef = doc(collection(db,'carts'));
-    // await setDoc(docRef, {
-    //   uid: user.uid,
-    //   cart: newCart
-    // })
-    // console.log(docRef.id);
-    // console.log(newCart);
-    setCart(newCart);
-    console.log(cart);
+    // add to firestore
+    const {success, error} = await productServices.handleCart(user, newCart);
+    console.log(success, error);
+    if (!success) {
+      toast.error("Error adding to cart!!");
+      return;
+    }
+    // toast.success("Added to Cart!!");
   }
-
+  
   return (
     <>
       {data.map((product) => {
@@ -64,7 +60,10 @@ export default function ItemsCard({ searchText, price, category }) {
               <div className="space-y-2">
                 <p className="font-bold">{product.price}</p>
 
-                <button className="h-10 w-full p-1.5 bg-darkPurple text-lg text-white rounded-md shadow-lg shadow-slate-400 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 " onClick={() => handleAddToCart(product)}>
+                <button
+                  className="h-10 w-full p-1.5 bg-darkPurple text-lg text-white rounded-md shadow-lg shadow-slate-400 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 "
+                  onClick={() => handleAddToCart(product)}
+                >
                   Add to Cart
                 </button>
               </div>
