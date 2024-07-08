@@ -35,19 +35,12 @@ const UserState = ({ children }) => {
       snapshot.docs.map((doc) => {
         if (doc.data().uid === user.uid) {
           const cartData = doc.data().cart;
-          console.log('cartData',cartData);
-          // check if cart is empty
-          if (cartData.length === 0) {
-            console.log("cart is empty");
-            setCart([]);
-          }
-          else{
-            setCart(cartData);
-          }
+          console.log('USERSTATE : cartData',cartData);
+          setCart(cartData);
         }
-        // else{
-        //   setCart([]);
-        // }
+        else{
+          setCart([]);
+        }
       });
     });
   }, [user]);

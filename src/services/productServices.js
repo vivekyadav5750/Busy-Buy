@@ -1,5 +1,5 @@
 import {
-    addDoc,
+  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -8,7 +8,7 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import {db} from "../firebaseInit";
+import { db } from "../firebaseInit";
 
 export class ProductServices {
   constructor() {

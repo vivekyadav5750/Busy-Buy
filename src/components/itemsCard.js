@@ -5,17 +5,22 @@ import userContext from "../context/user/userContext";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import productServices from "../services/productServices.js";
+//redux
+import { useDispatch, useSelector } from "react-redux";
+import { handleCartThunk } from "../redux/productReducer";
+import { productSelector } from "../redux/productReducer";
 
 export default function ItemsCard({ searchText, price, category }) {
   const { user, cart } = useContext(userContext);
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector(productSelector);
 
   async function handleAddToCart(product) {
     if (!user) {
       toast.info("Please Login to add to cart");
       return;
     }
-    
+
     const newCart = [...cart];
     console.log(newCart);
     const index = newCart.findIndex((item) => item.id === product.id);
@@ -24,17 +29,18 @@ export default function ItemsCard({ searchText, price, category }) {
     } else {
       newCart[index].quantity += 1;
     }
-    
+
     // add to firestore
-    const {success, error} = await productServices.handleCart(user, newCart);
-    console.log(success, error);
-    if (!success) {
+    dispatch(handleCartThunk({ user, newCart }));
+    console.log("Product Selector", loading, error);
+
+    if (error) {
       toast.error("Error adding to cart!!");
       return;
     }
-    // toast.success("Added to Cart!!");
+    toast.success("Added to Cart!!");
   }
-  
+
   return (
     <>
       {data.map((product) => {
@@ -72,7 +78,6 @@ export default function ItemsCard({ searchText, price, category }) {
         }
       })}
 
-      {/* </div> */}
     </>
   );
 }

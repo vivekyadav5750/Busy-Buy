@@ -1,14 +1,18 @@
-import { orderData } from "../Assets/orderData";
 import { useContext } from "react";
 import userContext from "../context/user/userContext";
 
 export default function Order() {
-  const { purchaseHistory, setPurchaseHistory } = useContext(userContext);
+  const { purchaseHistory } = useContext(userContext);
   console.log(purchaseHistory);
 
   return (
     <>
       <div className="flex justify-center">
+        {(purchaseHistory.length === 0) ? (
+          <h1 className="text-4xl font-bold tracking-widest text-center mt-2">
+            No Orders
+          </h1>
+        ) : 
         <div className="w-2/4 flex flex-col justify-center text-center  space-y-8">
           <h1 className="text-3xl font-bold tracking-widest ">Your Orders</h1>
 
@@ -64,7 +68,9 @@ export default function Order() {
               </div>
             ))}
           </div>
+          
         </div>
+      }
       </div>
     </>
   );
